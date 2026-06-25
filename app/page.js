@@ -58,7 +58,6 @@ export default function Game() {
         }
     }, [maze, player]);
 
-    // Função central para processar o movimento e checar as flores
     const handleTargetMovement = (nextX, nextY) => {
         if (nextY >= 0 && nextY < maze.length && nextX >= 0 && nextX < maze[0].length) {
             if (maze[nextY][nextX] !== 1) {
@@ -83,7 +82,6 @@ export default function Game() {
         }
     };
 
-    // Movimentação por botões virtuais ou teclado
     const movePlayer = (direction) => {
         let nextX = player.x;
         let nextY = player.y;
@@ -96,14 +94,12 @@ export default function Game() {
         handleTargetMovement(nextX, nextY);
     };
 
-    // NOVO: Movimentação ao tocar diretamente no labirinto
     const handleCanvasClick = (e) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         const rect = canvas.getBoundingClientRect();
         
-        // Detecta a posição exata do clique (suporta mouse e toque)
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const clientY = e.clientY || (e.touches && e.touches[0].clientY);
         
@@ -112,11 +108,9 @@ export default function Game() {
         const x = clientX - rect.left;
         const y = clientY - rect.top;
 
-        // Converte os pixels clicados para posições da matriz (0 a 9)
         const clickedX = Math.floor(x / TILE_SIZE);
         const clickedY = Math.floor(y / TILE_SIZE);
 
-        // Permite mover se o clique for em um quadrado adjacente ao jogador
         const dX = Math.abs(clickedX - player.x);
         const dY = Math.abs(clickedY - player.y);
 
@@ -141,10 +135,13 @@ export default function Game() {
             <div className="text-center bg-white p-5 rounded-2xl shadow-xl max-w-sm w-full">
                 <h1 className="text-xl font-bold mb-1">O Labirinto das Flores Perdidas 🌷</h1>
                 
-                {/* MENSAGEM EXPLICITANDO AS DUAS OPÇÕES DE CONTROLE */}
-                <p className="text-[10px] mb-3 text-gray-500 bg-gray-50 p-2 rounded border border-dashed border-gray-200">
-                    🎮 <strong>Como jogar:</strong> Você pode usar as <strong>setas do controle</strong> abaixo ou <strong>tocar direto nos caminhos livres</strong> do labirinto para andar!
+                {/* Legenda de controles mantida */}
+                <p className="text-[10px] mb-2 text-gray-500 bg-gray-50 p-2 rounded border border-dashed border-gray-200">
+                    🎮 <strong>Como jogar:</strong> Use as setas do controle ou toque direto nos caminhos para andar!
                 </p>
+
+                {/* Mensagem solicitada mantida aqui */}
+                <p className="text-[11px] mb-3 text-gray-500 font-medium">Ajude a baixista a encontrar o caminho!</p>
                 
                 <canvas 
                     ref={canvasRef} 
@@ -159,7 +156,7 @@ export default function Game() {
                     <p className="font-semibold">{message}</p>
                 </div>
 
-                {/* D-PAD ERGONÔMICO */}
+                {/* D-PAD */}
                 <div className="mt-6 mb-2 grid grid-cols-3 gap-2 mx-auto w-48 h-48 justify-items-center items-center">
                     <div></div>
                     <button 
