@@ -20,7 +20,7 @@ const INITIAL_MAZE = [
 
 const FLOWER_MESSAGES = {
     2: "🌷 'Oii gatinha!!'",
-    3: "🌻 'Mais uma flor para a melhor produtora rumo a cannes'",
+    3: "🌻 'Mais uma flor, para a melhor produtora rumo a cannes'",
     4: "🌹 'Você decifrou o labirinto! Final do jogo: Prepare o coração, aumenta o som e solta o Jazz!! ❤️'"
 };
 
