@@ -19,9 +19,9 @@ const INITIAL_MAZE = [
 ];
 
 const FLOWER_MESSAGES = {
-    2: "🌷 'Obrigado por iluminar meus dias, mesmo estando longe!'",
-    3: "🌻 'Achei essa aqui perto daquela nossa piada interna. Que saudade de rir com você!'",
-    4: "🌹 'Você decifrou o labirinto! Final do jogo: Prepare o coração, aumenta o som e solta o groove! ❤️'"
+    2: "🌷 'Oii gatinha!!'",
+    3: "🌻 'Mais uma flor para a melhor produtora rumo a cannes'",
+    4: "🌹 'Você decifrou o labirinto! Final do jogo: Prepare o coração, aumenta o som e solta o Jazz!! ❤️'"
 };
 
 export default function Game() {
