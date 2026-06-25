@@ -18,7 +18,6 @@ const INITIAL_MAZE = [
     [1, 1, 1, 1, 0, 0, 0, 1, 0, 0]
 ];
 
-// Mensagens personalizadas atualizadas
 const FLOWER_MESSAGES = {
     2: "🌷 'Oii gatinha!!'",
     3: "🌻 'Mais uma flor, para a melhor produtora rumo a cannes'",
@@ -59,15 +58,8 @@ export default function Game() {
         }
     }, [maze, player]);
 
-    const movePlayer = (direction) => {
-        let nextX = player.x;
-        let nextY = player.y;
-        
-        if (direction === "UP") nextY--;
-        if (direction === "DOWN") nextY++;
-        if (direction === "LEFT") nextX--;
-        if (direction === "RIGHT") nextX++;
-        
+    // Função central para processar o movimento e checar as flores
+    const handleTargetMovement = (nextX, nextY) => {
         if (nextY >= 0 && nextY < maze.length && nextX >= 0 && nextX < maze[0].length) {
             if (maze[nextY][nextX] !== 1) {
                 setPlayer({ x: nextX, y: nextY });
@@ -91,6 +83,48 @@ export default function Game() {
         }
     };
 
+    // Movimentação por botões virtuais ou teclado
+    const movePlayer = (direction) => {
+        let nextX = player.x;
+        let nextY = player.y;
+        
+        if (direction === "UP") nextY--;
+        if (direction === "DOWN") nextY++;
+        if (direction === "LEFT") nextX--;
+        if (direction === "RIGHT") nextX++;
+        
+        handleTargetMovement(nextX, nextY);
+    };
+
+    // NOVO: Movimentação ao tocar diretamente no labirinto
+    const handleCanvasClick = (e) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const rect = canvas.getBoundingClientRect();
+        
+        // Detecta a posição exata do clique (suporta mouse e toque)
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        if (!clientX || !clientY) return;
+
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        // Converte os pixels clicados para posições da matriz (0 a 9)
+        const clickedX = Math.floor(x / TILE_SIZE);
+        const clickedY = Math.floor(y / TILE_SIZE);
+
+        // Permite mover se o clique for em um quadrado adjacente ao jogador
+        const dX = Math.abs(clickedX - player.x);
+        const dY = Math.abs(clickedY - player.y);
+
+        if ((dX === 1 && dY === 0) || (dX === 0 && dY === 1)) {
+            handleTargetMovement(clickedX, clickedY);
+        }
+    };
+
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "ArrowUp") movePlayer("UP");
@@ -106,20 +140,26 @@ export default function Game() {
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#f7ede2] font-mono text-[#3d348b] p-2 select-none">
             <div className="text-center bg-white p-5 rounded-2xl shadow-xl max-w-sm w-full">
                 <h1 className="text-xl font-bold mb-1">O Labirinto das Flores Perdidas 🌷</h1>
-                <p className="text-[11px] mb-3 text-gray-500">Ajude a baixista a encontrar o caminho!</p>
+                
+                {/* MENSAGEM EXPLICITANDO AS DUAS OPÇÕES DE CONTROLE */}
+                <p className="text-[10px] mb-3 text-gray-500 bg-gray-50 p-2 rounded border border-dashed border-gray-200">
+                    🎮 <strong>Como jogar:</strong> Você pode usar as <strong>setas do controle</strong> abaixo ou <strong>tocar direto nos caminhos livres</strong> do labirinto para andar!
+                </p>
                 
                 <canvas 
                     ref={canvasRef} 
                     width={MAP_SIZE} 
                     height={MAP_SIZE} 
-                    className="bg-[#f3c68f] border-4 border-[#3d348b] rounded-lg mx-auto shadow-inner"
+                    onClick={handleCanvasClick}
+                    onTouchStart={handleCanvasClick}
+                    className="bg-[#f3c68f] border-4 border-[#3d348b] rounded-lg mx-auto shadow-inner cursor-pointer"
                 />
                 
                 <div className="mt-3 p-3 bg-[#fefae0] border-l-4 border-red-500 rounded text-xs min-h-[55px] flex items-center justify-center text-center">
                     <p className="font-semibold">{message}</p>
                 </div>
 
-                {/* D-PAD ERGONÔMICO PARA MOBILE */}
+                {/* D-PAD ERGONÔMICO */}
                 <div className="mt-6 mb-2 grid grid-cols-3 gap-2 mx-auto w-48 h-48 justify-items-center items-center">
                     <div></div>
                     <button 
